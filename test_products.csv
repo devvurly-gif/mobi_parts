@@ -1,0 +1,9 @@
+Product Name,Product Description,Barcode/EAN13,Purchase Price,Sale Price,Stock Quantity,Minimum Stock,Active (true/false)
+Example Product 190,This is an example product description,1234567890123,10.5,15.99,100,10,true
+Example Product 191,Another example product,1234567890124,25,35,50,5,true
+Example Product 192,This is an example product description,1234567890125,39.5,54.01,0,5,false
+Example Product 193,Another example product,1234567890126,54,73.02,34,5,true
+Example Product 194,This is an example product description,1234567890127,68.5,92.03,54,5,true
+Example Product 195,Another example product,1234567890128,83,111.04,55,5,true
+Example Product 196,This is an example product description,1234567890129,97.5,130.05,33,5,true
+Example Product 197,Another example product,1234567890130,112,149.06,55,5,true
