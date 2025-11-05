@@ -7,6 +7,7 @@ import Products from '../components/pages/Products.vue'
 import ProductImportRowByRow from '../components/pages/ProductImportRowByRow.vue'
 import ProductStockImport from '../components/pages/ProductStockImport.vue'
 import ProductEdit from '../components/pages/ProductEdit.vue'
+import ProductView from '../components/pages/ProductView.vue'
 import Login from '../components/Login.vue'
 import Install from '../components/pages/Install.vue'
 import Home from '../components/pages/Home.vue'
@@ -49,6 +50,14 @@ const routes = [
     meta: { 
       requiresAuth: true,
       title: 'Products'
+    }
+  },
+  {
+    path: '/product/:id',
+    name: 'product-view',
+    component: ProductView,
+    meta: { 
+      title: 'Product Details'
     }
   },
   {

@@ -18,17 +18,18 @@
         </div>
 
         <!-- Empty state -->
-        <div v-else-if="products.length === 0" class="p-10 text-center bg-white rounded-lg shadow">
-          <h3 class="mt-2 text-lg font-medium text-gray-900">No products found</h3>
-          <p class="mt-1 text-sm text-gray-500">Please add products from the dashboard.</p>
+        <div v-else-if="!loading && activeProducts.length === 0" class="p-10 text-center bg-white rounded-lg shadow">
+          <h3 class="mt-2 text-lg font-medium text-gray-900">No products available</h3>
+          <p class="mt-1 text-sm text-gray-500">No active products found at this time.</p>
         </div>
 
         <!-- Product grid -->
-        <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          <div
-            v-for="product in products"
+        <div v-else-if="!loading && activeProducts.length > 0" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <router-link
+            v-for="product in activeProducts"
             :key="product.id"
-            class="bg-white rounded-lg shadow hover:shadow-md transition-shadow overflow-hidden flex flex-col"
+            :to="`/product/${product.id}`"
+            class="bg-white rounded-lg shadow hover:shadow-md transition-shadow overflow-hidden flex flex-col cursor-pointer"
           >
             <div class="aspect-w-4 aspect-h-3 bg-gray-100">
             
@@ -61,7 +62,7 @@
                 <p v-if="product.ean13" class="mt-1 text-xs text-gray-400 font-mono">{{ product.ean13 }}</p>
               </div>
             </div>
-          </div>
+          </router-link>
         </div>
       </div>
     </main>
@@ -113,7 +114,12 @@ export default {
       }
     })
 
-    return { products, loading, handleImageError }
+    // Filter only active products for public view
+    const activeProducts = computed(() => {
+      return products.value.filter(product => product.is_active !== false)
+    })
+
+    return { products, activeProducts, loading, handleImageError }
   }
 }
 </script>

@@ -52,7 +52,7 @@ class ProductController extends Controller
      */
     public function show(Product $product): JsonResponse
     {
-        $product->load(['category', 'primaryImage']);
+        $product->load(['category', 'primaryImage', 'images']);
         
         return response()->json([
             'product' => $product,
