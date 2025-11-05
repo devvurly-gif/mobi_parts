@@ -132,9 +132,12 @@ export const useAuthStore = defineStore('auth', {
       
       try {
         const response = await axios.put('/api/profile', profileData)
-        this.user = response.data
-        toast.success('Profile updated successfully!')
-        return { success: true, user: response.data }
+        // Update user from response (API returns { user: {...}, message: '...' })
+        if (response.data.user) {
+          this.user = response.data.user
+        }
+        toast.success(response.data.message || 'Profile updated successfully!')
+        return { success: true, user: response.data.user || response.data }
       } catch (error) {
         const message = error.response?.data?.message || 'Profile update failed'
         toast.error(message)

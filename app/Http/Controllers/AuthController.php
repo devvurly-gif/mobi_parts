@@ -147,4 +147,59 @@ class AuthController extends Controller
             'created_at' => $token->created_at,
         ]);
     }
+
+    /**
+     * Update user profile
+     */
+    public function updateProfile(Request $request): JsonResponse
+    {
+        $user = $request->user();
+        
+        $data = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $user->id,
+        ]);
+
+        $user->update([
+            'name' => $data['name'],
+            'email' => $data['email'],
+        ]);
+
+        return response()->json([
+            'user' => $user->fresh(),
+            'message' => 'Profile updated successfully'
+        ]);
+    }
+
+    /**
+     * Change user password
+     */
+    public function changePassword(Request $request): JsonResponse
+    {
+        $user = $request->user();
+        
+        $data = $request->validate([
+            'current_password' => 'required',
+            'password' => 'required|min:6|confirmed',
+        ]);
+
+        // Verify current password
+        if (!Hash::check($data['current_password'], $user->password)) {
+            return response()->json([
+                'message' => 'Current password is incorrect',
+                'errors' => [
+                    'current_password' => ['The current password is incorrect.']
+                ]
+            ], 422);
+        }
+
+        // Update password
+        $user->update([
+            'password' => Hash::make($data['password'])
+        ]);
+
+        return response()->json([
+            'message' => 'Password changed successfully'
+        ]);
+    }
 }

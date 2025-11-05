@@ -11,6 +11,9 @@ import ProductView from '../components/pages/ProductView.vue'
 import Login from '../components/Login.vue'
 import Install from '../components/pages/Install.vue'
 import Home from '../components/pages/Home.vue'
+import Profile from '../components/pages/Profile.vue'
+import Categories from '../components/pages/Categories.vue'
+import Users from '../components/pages/Users.vue'
 
 const routes = [
   {
@@ -50,6 +53,15 @@ const routes = [
     meta: { 
       requiresAuth: true,
       title: 'Products'
+    }
+  },
+  {
+    path: '/categories',
+    name: 'categories',
+    component: Categories,
+    meta: { 
+      requiresAuth: true,
+      title: 'Categories'
     }
   },
   {
@@ -103,6 +115,24 @@ const routes = [
     meta: { 
       requiresGuest: true,
       title: 'Register'
+    }
+  },
+  {
+    path: '/profile',
+    name: 'profile',
+    component: Profile,
+    meta: { 
+      requiresAuth: true,
+      title: 'Profile'
+    }
+  },
+  {
+    path: '/users',
+    name: 'users',
+    component: Users,
+    meta: { 
+      requiresAuth: true,
+      title: 'Users'
     }
   },
   // Catch all route - redirect to home

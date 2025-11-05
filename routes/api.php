@@ -59,6 +59,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/refresh', [AuthController::class, 'refresh']);
     Route::post('/revoke-all-tokens', [AuthController::class, 'revokeAllTokens']);
     Route::get('/token-info', [AuthController::class, 'tokenInfo']);
+    
+    // Profile routes
+    Route::put('/profile', [AuthController::class, 'updateProfile']);
+    Route::put('/change-password', [AuthController::class, 'changePassword']);
+
+    // User management routes
+    Route::apiResource('users', \App\Http\Controllers\UserController::class);
 
     // Test API route for Vue app
     Route::get('/test', function () {

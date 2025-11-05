@@ -44,9 +44,10 @@ export const useCategoryStore = defineStore('category', {
       
       try {
         const response = await axios.post('/api/categories', categoryData)
-        this.categories.push(response.data)
-        toast.success('Category created successfully!')
-        return { success: true, data: response.data }
+        const category = response.data.category || response.data
+        this.categories.push(category)
+        toast.success(response.data.message || 'Category created successfully!')
+        return { success: true, data: category }
       } catch (error) {
         this.error = error.response?.data?.message || 'Failed to create category'
         toast.error(this.error)
@@ -63,12 +64,15 @@ export const useCategoryStore = defineStore('category', {
       
       try {
         const response = await axios.put(`/api/categories/${id}`, categoryData)
-        const index = this.categories.findIndex(category => category.id === id)
+        const category = response.data.category || response.data
+        const index = this.categories.findIndex(cat => cat.id === id)
         if (index !== -1) {
-          this.categories[index] = response.data
+          this.categories[index] = category
+        } else {
+          this.categories.push(category)
         }
-        toast.success('Category updated successfully!')
-        return { success: true, data: response.data }
+        toast.success(response.data.message || 'Category updated successfully!')
+        return { success: true, data: category }
       } catch (error) {
         this.error = error.response?.data?.message || 'Failed to update category'
         toast.error(this.error)
@@ -104,8 +108,9 @@ export const useCategoryStore = defineStore('category', {
       
       try {
         const response = await axios.get(`/api/categories/${id}`)
-        this.currentCategory = response.data
-        return { success: true, data: response.data }
+        const category = response.data.category || response.data
+        this.currentCategory = category
+        return { success: true, data: category }
       } catch (error) {
         this.error = error.response?.data?.message || 'Failed to fetch category'
         toast.error(this.error)
