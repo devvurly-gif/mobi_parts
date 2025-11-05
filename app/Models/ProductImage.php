@@ -58,17 +58,39 @@ class ProductImage extends Model
             return $this->image_path;
         }
         
-        // Generate URL for public disk
-        // image_path contains 'products/filename.jpg' from store('products', 'public')
-        // Get the base URL from filesystem config
-        $baseUrl = config('filesystems.disks.public.url', asset('storage'));
-        
-        // Ensure base URL ends with /storage
-        if (!str_ends_with($baseUrl, '/storage')) {
-            $baseUrl = rtrim($baseUrl, '/') . '/storage';
+        // If image_path is empty, return null
+        if (empty($this->image_path)) {
+            return null;
         }
         
-        // Build full URL
-        return rtrim($baseUrl, '/') . '/' . ltrim($this->image_path, '/');
+        // Use Storage::url() which automatically handles APP_URL and storage symlink
+        // This is the Laravel-recommended way to generate storage URLs
+        try {
+            $url = Storage::disk('public')->url($this->image_path);
+            
+            // Ensure we have a full URL (not relative)
+            if (str_starts_with($url, 'http')) {
+                return $url;
+            }
+            
+            // If Storage::url() returns a relative path, prepend APP_URL
+            $appUrl = config('app.url', env('APP_URL', 'http://localhost'));
+            $appUrl = rtrim($appUrl, '/');
+            
+            // If URL starts with /storage, use it directly
+            if (str_starts_with($url, '/storage')) {
+                return $appUrl . $url;
+            }
+            
+            // Otherwise, ensure /storage prefix
+            return $appUrl . '/storage/' . ltrim($url, '/');
+            
+        } catch (\Exception $e) {
+            // Fallback: manual URL construction
+            $appUrl = config('app.url', env('APP_URL', 'http://localhost'));
+            $appUrl = rtrim($appUrl, '/');
+            
+            return $appUrl . '/storage/' . ltrim($this->image_path, '/');
+        }
     }
 }
