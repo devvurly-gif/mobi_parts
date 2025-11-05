@@ -130,39 +130,18 @@ class Product extends Model
         // Check if default placeholder exists in storage
         $defaultImagePath = 'products/default-placeholder.png';
         
-        // Use Storage::url() for consistent URL generation
-        try {
-            $imageUrl = \Illuminate\Support\Facades\Storage::disk('public')->url($defaultImagePath);
-            
-            // Ensure we have a full URL
-            if (!str_starts_with($imageUrl, 'http')) {
-                $appUrl = config('app.url', env('APP_URL', 'http://localhost'));
-                $appUrl = rtrim($appUrl, '/');
-                
-                if (str_starts_with($imageUrl, '/storage')) {
-                    $imageUrl = $appUrl . $imageUrl;
-                } else {
-                    $imageUrl = $appUrl . '/storage/' . ltrim($imageUrl, '/');
-                }
-            }
-        } catch (\Exception $e) {
-            // Fallback: manual URL construction
-            $appUrl = config('app.url', env('APP_URL', 'http://localhost'));
-            $appUrl = rtrim($appUrl, '/');
-            $imageUrl = $appUrl . '/storage/' . ltrim($defaultImagePath, '/');
-        }
+        // Get APP_URL from config
+        $appUrl = config('app.url', env('APP_URL', 'http://localhost'));
+        $appUrl = rtrim($appUrl, '/');
+        
+        // Build URL for default placeholder
+        $imageUrl = $appUrl . '/storage/' . $defaultImagePath;
         
         // Check if file exists, if not generate it
         if (!\Illuminate\Support\Facades\Storage::disk('public')->exists($defaultImagePath)) {
             // Try to generate the default image
             try {
                 \Illuminate\Support\Facades\Artisan::call('product:generate-default-image');
-                // Regenerate URL after creation
-                $imageUrl = \Illuminate\Support\Facades\Storage::disk('public')->url($defaultImagePath);
-                if (!str_starts_with($imageUrl, 'http')) {
-                    $appUrl = config('app.url', env('APP_URL', 'http://localhost'));
-                    $imageUrl = rtrim($appUrl, '/') . (str_starts_with($imageUrl, '/') ? $imageUrl : '/storage/' . $imageUrl);
-                }
             } catch (\Exception $e) {
                 // If generation fails, use placeholder service as fallback
                 $imageUrl = 'https://via.placeholder.com/800x800/E5E7EB/9CA3AF?text=' . urlencode(substr($this->name, 0, 20));
