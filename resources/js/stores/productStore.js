@@ -145,7 +145,8 @@ export const useProductStore = defineStore('product', {
       try {
         const response = await axios.post('/api/products', productData)
         this.products.unshift(response.data.product)
-        toast.success('Product created successfully!')
+        const productName = response.data.product?.name || 'Product'
+        toast.success(`${productName} added successfully!`)
         return { success: true, data: response.data }
       } catch (error) {
         this.error = error.response?.data?.message || 'Failed to create product'
