@@ -72,7 +72,7 @@
           <li v-for="product in products" :key="product.id" class="px-6 py-4">
             <div class="flex items-center justify-between">
               <div class="flex items-center">
-                <div class="flex-shrink-0 h-10 w-10">
+                <div class="shrink-0 h-10 w-10">
                   <div class="h-10 w-10 rounded-full overflow-hidden bg-gray-100 border border-gray-200 flex items-center justify-center">
                     <img
                       v-if="product.primary_image?.image_url"
@@ -200,6 +200,215 @@
       :products="products"
       
     />
+
+    <!-- Add Product Modal -->
+    <div
+      v-if="showAddProductModal"
+      class="fixed inset-0 z-50 overflow-y-auto"
+      @click.self="closeAddProductModal"
+    >
+      <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+        <div class="fixed inset-0 transition-opacity" @click="closeAddProductModal"></div>
+
+        <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full">
+          <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4 max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-4">
+              <h3 class="text-lg leading-6 font-medium text-gray-900">
+                Add New Product
+              </h3>
+              <button
+                @click="closeAddProductModal"
+                class="text-gray-400 hover:text-gray-500"
+              >
+                <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+              </button>
+            </div>
+
+            <form @submit.prevent="saveProduct">
+              <div class="space-y-4">
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                  <!-- Product Name -->
+                  <div>
+                    <label for="add-name" class="block text-sm font-medium text-gray-700">
+                      Product Name <span class="text-red-500">*</span>
+                    </label>
+                    <input
+                      id="add-name"
+                      v-model="productForm.name"
+                      type="text"
+                      required
+                      class="mt-1 block w-full h-10 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                      :class="{ 'border-red-300': productErrors.name }"
+                    />
+                    <p v-if="productErrors.name" class="mt-1 text-sm text-red-600">{{ productErrors.name }}</p>
+                  </div>
+
+                  <!-- Category -->
+                  <div>
+                    <label for="add-category_id" class="block text-sm font-medium text-gray-700">
+                      Category <span class="text-red-500">*</span>
+                    </label>
+                    <select
+                      id="add-category_id"
+                      v-model="productForm.category_id"
+                      required
+                      class="mt-1 block w-full h-10 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                      :class="{ 'border-red-300': productErrors.category_id }"
+                    >
+                      <option value="">Select a category</option>
+                      <option v-for="category in categories" :key="category.id" :value="category.id">
+                        {{ category.name }}
+                      </option>
+                    </select>
+                    <p v-if="productErrors.category_id" class="mt-1 text-sm text-red-600">{{ productErrors.category_id }}</p>
+                  </div>
+
+                  <!-- EAN13 -->
+                  <div>
+                    <label for="add-ean13" class="block text-sm font-medium text-gray-700">EAN13</label>
+                    <input
+                      id="add-ean13"
+                      v-model="productForm.ean13"
+                      type="text"
+                      class="mt-1 block w-full h-10 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                      :class="{ 'border-red-300': productErrors.ean13 }"
+                    />
+                    <p v-if="productErrors.ean13" class="mt-1 text-sm text-red-600">{{ productErrors.ean13 }}</p>
+                  </div>
+
+                  <!-- Purchase Price -->
+                  <div>
+                    <label for="add-prix_achat" class="block text-sm font-medium text-gray-700">
+                      Purchase Price <span class="text-red-500">*</span>
+                    </label>
+                    <div class="mt-1 relative rounded-md shadow-sm">
+                      <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <span class="text-gray-500 sm:text-sm">$</span>
+                      </div>
+                      <input
+                        id="add-prix_achat"
+                        v-model="productForm.prix_achat"
+                        type="number"
+                        step="0.01"
+                        min="0"
+                        required
+                        class="pl-7 block w-full h-10 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                        :class="{ 'border-red-300': productErrors.prix_achat }"
+                      />
+                    </div>
+                    <p v-if="productErrors.prix_achat" class="mt-1 text-sm text-red-600">{{ productErrors.prix_achat }}</p>
+                  </div>
+
+                  <!-- Sale Price -->
+                  <div>
+                    <label for="add-prix_vente" class="block text-sm font-medium text-gray-700">
+                      Sale Price <span class="text-red-500">*</span>
+                    </label>
+                    <div class="mt-1 relative rounded-md shadow-sm">
+                      <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <span class="text-gray-500 sm:text-sm">$</span>
+                      </div>
+                      <input
+                        id="add-prix_vente"
+                        v-model="productForm.prix_vente"
+                        type="number"
+                        step="0.01"
+                        min="0"
+                        required
+                        class="pl-7 block w-full h-10 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                        :class="{ 'border-red-300': productErrors.prix_vente }"
+                      />
+                    </div>
+                    <p v-if="productErrors.prix_vente" class="mt-1 text-sm text-red-600">{{ productErrors.prix_vente }}</p>
+                  </div>
+
+                  <!-- Stock Quantity -->
+                  <div>
+                    <label for="add-stock_quantity" class="block text-sm font-medium text-gray-700">Stock Quantity</label>
+                    <input
+                      id="add-stock_quantity"
+                      v-model="productForm.stock_quantity"
+                      type="number"
+                      min="0"
+                      class="mt-1 block w-full h-10 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    />
+                  </div>
+
+                  <!-- Min Stock -->
+                  <div>
+                    <label for="add-min_stock" class="block text-sm font-medium text-gray-700">Min Stock</label>
+                    <input
+                      id="add-min_stock"
+                      v-model="productForm.min_stock"
+                      type="number"
+                      min="0"
+                      class="mt-1 block w-full h-10 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    />
+                  </div>
+
+                  <!-- Image URL -->
+                  <div class="sm:col-span-2">
+                    <label for="add-image" class="block text-sm font-medium text-gray-700">Image URL</label>
+                    <input
+                      id="add-image"
+                      v-model="productForm.image"
+                      type="url"
+                      class="mt-1 block w-full h-10 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    />
+                  </div>
+
+                  <!-- Active Status -->
+                  <div class="sm:col-span-2">
+                    <div class="flex items-center">
+                      <input
+                        id="add-is_active"
+                        v-model="productForm.is_active"
+                        type="checkbox"
+                        class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+                      />
+                      <label for="add-is_active" class="ml-2 block text-sm text-gray-900">
+                        Product is active
+                      </label>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Description -->
+                <div>
+                  <label for="add-description" class="block text-sm font-medium text-gray-700">Description</label>
+                  <textarea
+                    id="add-description"
+                    v-model="productForm.description"
+                    rows="3"
+                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  ></textarea>
+                </div>
+              </div>
+
+              <div class="mt-5 sm:mt-6 sm:grid sm:grid-cols-2 sm:gap-3 sm:grid-flow-row-dense">
+                <button
+                  type="submit"
+                  :disabled="savingProduct"
+                  class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:col-start-2 sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <span v-if="savingProduct">Creating...</span>
+                  <span v-else>Create Product</span>
+                </button>
+                <button
+                  type="button"
+                  @click="closeAddProductModal"
+                  class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:col-start-1 sm:text-sm"
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -228,9 +437,25 @@ export default {
     const showImagesModal = ref(false)
     const showPrintModal = ref(false)
     const selectedProduct = ref(null)
+    const savingProduct = ref(false)
     const filters = ref({
       search: ''
     })
+
+    const productForm = ref({
+      name: '',
+      category_id: '',
+      description: '',
+      ean13: '',
+      prix_achat: 0,
+      prix_vente: 0,
+      stock_quantity: 0,
+      min_stock: 0,
+      image: '',
+      is_active: true
+    })
+
+    const productErrors = ref({})
 
    
 
@@ -326,7 +551,7 @@ export default {
         event.target.style.display = 'none'
       } else {
         // Try to use a placeholder service as fallback
-        const placeholderUrl = `https://via.placeholder.com/100x100/E5E7EB/9CA3AF?text=${encodeURIComponent(product.name.charAt(0))}`
+        const placeholderUrl = ``
         event.target.src = placeholderUrl
       }
     }
@@ -371,6 +596,68 @@ export default {
       toast.success(`Exported ${products.value.length} products to CSV`)
     }
 
+    const resetProductForm = () => {
+      productForm.value = {
+        name: '',
+        category_id: '',
+        description: '',
+        ean13: '',
+        prix_achat: 0,
+        prix_vente: 0,
+        stock_quantity: 0,
+        min_stock: 0,
+        image: '',
+        is_active: true
+      }
+      productErrors.value = {}
+    }
+
+    const closeAddProductModal = () => {
+      showAddProductModal.value = false
+      resetProductForm()
+    }
+
+    const saveProduct = async () => {
+      savingProduct.value = true
+      productErrors.value = {}
+
+      try {
+        const productData = {
+          name: productForm.value.name,
+          category_id: productForm.value.category_id,
+          description: productForm.value.description || null,
+          ean13: productForm.value.ean13 || null,
+          prix_achat: parseFloat(productForm.value.prix_achat) || 0,
+          prix_vente: parseFloat(productForm.value.prix_vente) || 0,
+          stock_quantity: parseInt(productForm.value.stock_quantity) || 0,
+          min_stock: parseInt(productForm.value.min_stock) || 0,
+          image: productForm.value.image || null,
+          is_active: productForm.value.is_active !== false
+        }
+
+        const result = await productStore.createProduct(productData)
+        
+        if (result.success) {
+          closeAddProductModal()
+          // Product will be added to the list automatically by the store
+        } else {
+          if (result.errors) {
+            productErrors.value = result.errors
+          }
+        }
+      } catch (error) {
+        if (error.response?.data?.errors) {
+          Object.keys(error.response.data.errors).forEach(key => {
+            productErrors.value[key] = error.response.data.errors[key][0]
+          })
+        } else {
+          toast.error(error.response?.data?.message || 'Failed to create product')
+        }
+      } finally {
+        savingProduct.value = false
+      }
+    }
+
 
     
     // Watch for filter changes
@@ -397,6 +684,9 @@ export default {
       loading,
       pagination,
       visiblePages,
+      productForm,
+      productErrors,
+      savingProduct,
       applyFilters,
       clearFilters,
       goToPage,
@@ -407,7 +697,8 @@ export default {
       onPrimaryChanged,
       handleImageError,
       exportProducts,
-     
+      closeAddProductModal,
+      saveProduct
     }
   }
 }

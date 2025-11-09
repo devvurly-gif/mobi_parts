@@ -74,7 +74,7 @@
           <li v-for="category in filteredCategories" :key="category.id" class="px-6 py-4 hover:bg-gray-50">
             <div class="flex items-center justify-between">
               <div class="flex items-center flex-1">
-                <div class="flex-shrink-0">
+                <div class="shrink-0">
                   <div class="h-12 w-12 rounded-lg overflow-hidden bg-gray-100 border border-gray-200 flex items-center justify-center">
                     <img
                       v-if="category.image"
@@ -128,7 +128,7 @@
       @click.self="closeModal"
     >
       <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
-        <div class="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75" @click="closeModal"></div>
+        <div class="fixed inset-0 transition-opacity" @click="closeModal"></div>
 
         <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
           <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
