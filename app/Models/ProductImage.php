@@ -64,7 +64,7 @@ class ProductImage extends Model
         }
         
         // Get APP_URL from config
-        $appUrl = config('app.url', env('APP_URL', 'http://localhost'));
+        $appUrl = config('app.url', env('APP_URL', 'http://127.0.0.1:8000'));
         $appUrl = rtrim($appUrl, '/');
         
         // Clean the image path (remove leading slash if present)

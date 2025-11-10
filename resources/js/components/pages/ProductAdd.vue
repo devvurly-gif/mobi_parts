@@ -5,8 +5,8 @@
       <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between items-center">
           <div>
-            <h1 class="text-3xl font-bold text-gray-900">Edit Product</h1>
-            <p class="mt-1 text-sm text-gray-600">Update product information and settings.</p>
+            <h1 class="text-3xl font-bold text-gray-900">Add New Product</h1>
+            <p class="mt-1 text-sm text-gray-600">Create a new product in your inventory.</p>
           </div>
           <button 
             @click="$router.push('/products')"
@@ -18,51 +18,17 @@
       </div>
     </div>
 
-    <!-- Loading State -->
-    <div v-if="loading" class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-      <div class="bg-white shadow rounded-lg p-6 text-center">
-        <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
-        <p class="mt-2 text-gray-600">Loading product...</p>
-      </div>
-    </div>
-
-    <!-- Error State -->
-    <div v-else-if="error" class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-      <div class="bg-red-50 border border-red-200 rounded-lg p-6">
-        <div class="flex">
-          <div class="flex-shrink-0">
-            <svg class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
-              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
-            </svg>
-          </div>
-          <div class="ml-3">
-            <h3 class="text-sm font-medium text-red-800">Error</h3>
-            <div class="mt-2 text-sm text-red-700">
-              <p>{{ error }}</p>
-            </div>
-            <div class="mt-4">
-              <button 
-                @click="loadProduct"
-                class="bg-red-100 hover:bg-red-200 text-red-800 px-3 py-2 rounded-md text-sm font-medium"
-              >
-                Try Again
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Edit Form -->
-    <div v-else-if="product" class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+    <!-- Add Form -->
+    <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
       <div class="bg-white shadow rounded-lg">
-        <form @submit.prevent="updateProduct" class="p-6 space-y-6">
+        <form @submit.prevent="handleSave" class="p-6 space-y-6">
           <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
             <!-- Product Name -->
             <div>
               <label for="name" class="block text-sm font-medium text-gray-700">Product Name *</label>
               <input
                 id="name"
+                ref="nameInput"
                 v-model="form.name"
                 type="text"
                 required
@@ -233,7 +199,7 @@
                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
               </svg>
-              {{ saving ? 'Saving...' : 'Update Product' }}
+              {{ saving ? 'Creating...' : 'Create Product' }}
             </button>
           </div>
         </form>
@@ -243,26 +209,21 @@
 </template>
 
 <script>
-import { ref, computed, onMounted } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { ref, computed, onMounted, nextTick } from 'vue'
+import { useRouter } from 'vue-router'
 import { useProductStore } from '../../stores/productStore'
 import { useCategoryStore } from '../../stores/categoryStore'
 import { useToast } from 'vue-toastification'
 
 export default {
-  name: 'ProductEdit',
+  name: 'ProductAdd',
   setup() {
-    const route = useRoute()
     const router = useRouter()
     const productStore = useProductStore()
     const categoryStore = useCategoryStore()
     const toast = useToast()
-
-    const loading = ref(true)
+    const nameInput = ref(null)
     const saving = ref(false)
-    const error = ref('')
-    const product = ref(null)
-    const errors = ref({})
 
     const form = ref({
       name: '',
@@ -277,58 +238,32 @@ export default {
       is_active: true
     })
 
+    const errors = ref({})
     const categories = computed(() => categoryStore.categories)
 
-    const loadProduct = async () => {
+    const handleSave = async () => {
+      if (saving.value) {
+        return
+      }
+      
+      saving.value = true
+      errors.value = {}
+
       try {
-        loading.value = true
-        error.value = ''
-        const productId = route.params.id
-        
-        // Try to get product from store first
-        const existingProduct = productStore.products.find(p => p.id == productId)
-        if (existingProduct) {
-          product.value = existingProduct
-          populateForm(existingProduct)
-        } else {
-          // Fetch from API if not in store
-          const result = await productStore.fetchProduct(productId)
-          if (result.success) {
-            product.value = result.data
-            populateForm(result.data)
-          } else {
-            error.value = result.message || 'Failed to load product'
-          }
+        const productData = {
+          name: form.value.name,
+          category_id: form.value.category_id,
+          description: form.value.description || null,
+          ean13: form.value.ean13 || null,
+          prix_achat: parseFloat(form.value.prix_achat) || 0,
+          prix_vente: parseFloat(form.value.prix_vente) || 0,
+          stock_quantity: parseInt(form.value.stock_quantity) || 0,
+          min_stock: parseInt(form.value.min_stock) || 0,
+          image: form.value.image || null,
+          is_active: form.value.is_active !== false
         }
-      } catch (err) {
-        console.error('Error loading product:', err)
-        error.value = 'Failed to load product. Please try again.'
-      } finally {
-        loading.value = false
-      }
-    }
 
-    const populateForm = (productData) => {
-      form.value = {
-        name: productData.name || '',
-        category_id: productData.category_id || '',
-        description: productData.description || '',
-        ean13: productData.ean13 || '',
-        prix_achat: productData.prix_achat || 0,
-        prix_vente: productData.prix_vente || 0,
-        stock_quantity: productData.stock_quantity || 0,
-        min_stock: productData.min_stock || 0,
-        image: productData.image || '',
-        is_active: productData.is_active !== false
-      }
-    }
-
-    const updateProduct = async () => {
-      try {
-        saving.value = true
-        errors.value = {}
-        
-        const result = await productStore.updateProduct(route.params.id, form.value)
+        const result = await productStore.createProduct(productData)
         
         if (result.success) {
           router.push('/products')
@@ -336,12 +271,17 @@ export default {
           if (result.errors) {
             errors.value = result.errors
           } else {
-            toast.error(result.message || 'Failed to update product')
+            toast.error(result.message || 'Failed to create product')
           }
         }
-      } catch (err) {
-        console.error('Error updating product:', err)
-        toast.error('Failed to update product. Please try again.')
+      } catch (error) {
+        if (error.response?.data?.errors) {
+          Object.keys(error.response.data.errors).forEach(key => {
+            errors.value[key] = error.response.data.errors[key][0]
+          })
+        } else {
+          toast.error(error.response?.data?.message || 'Failed to create product')
+        }
       } finally {
         saving.value = false
       }
@@ -349,19 +289,19 @@ export default {
 
     onMounted(async () => {
       await categoryStore.fetchCategories()
-      await loadProduct()
+      await nextTick()
+      if (nameInput.value) {
+        nameInput.value.focus()
+      }
     })
 
     return {
-      loading,
-      saving,
-      error,
-      product,
+      nameInput,
       form,
       errors,
+      saving,
       categories,
-      loadProduct,
-      updateProduct
+      handleSave
     }
   }
 }

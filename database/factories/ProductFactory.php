@@ -28,7 +28,7 @@ class ProductFactory extends Factory
             'prix_vente' => $prixVente,
             'stock_quantity' => $this->faker->numberBetween(0, 100),
             'min_stock' => $this->faker->numberBetween(5, 20),
-            'image' => $this->faker->imageUrl(400, 400, 'products', true),
+            'image' => '/products/default-placeholder.png',
             'is_active' => $this->faker->boolean(85), // 85% chance of being active
         ];
     }

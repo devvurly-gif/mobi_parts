@@ -18,41 +18,17 @@
       </div>
     </div>
 
-    <!-- Search and Filters -->
+    <!-- Search -->
     <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
       <div class="bg-white shadow rounded-lg p-6 mb-6">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div>
-            <label for="search" class="block text-sm font-medium text-gray-700">Search</label>
-            <input
-              id="search"
-              v-model="filters.search"
-              type="text"
-              placeholder="Search by name or description..."
-              class="mt-1 block w-full h-10 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-            />
-          </div>
-          <div>
-            <label for="status" class="block text-sm font-medium text-gray-700">Status</label>
-            <select
-              id="status"
-              v-model="filters.is_active"
-              class="mt-1 block w-full h-10 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-            >
-              <option :value="null">All</option>
-              <option :value="true">Active</option>
-              <option :value="false">Inactive</option>
-            </select>
-          </div>
-          <div class="flex items-end">
-            <button
-              @click="clearFilters"
-              class="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200"
-            >
-              Clear Filters
-            </button>
-          </div>
-        </div>
+        <label for="search" class="block text-sm font-medium text-gray-700">Search</label>
+        <input
+          id="search"
+          v-model="filters.search"
+          type="text"
+          placeholder="Search by name or description..."
+          class="mt-1 block w-full h-10 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+        />
       </div>
 
       <!-- Categories Table -->
@@ -124,13 +100,10 @@
     <!-- Add/Edit Category Modal -->
     <div
       v-if="showModal"
-      class="fixed inset-0 z-50 overflow-y-auto"
-      @click.self="closeModal"
+      class="fixed inset-0 z-50 overflow-y-auto bg-gray-500"
     >
-      <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
-        <div class="fixed inset-0 transition-opacity" @click="closeModal"></div>
-
-        <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+      <div class="flex items-center justify-center min-h-screen px-4">
+        <div class="bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all max-w-lg w-full">
           <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
             <div class="flex justify-between items-center mb-4">
               <h3 class="text-lg leading-6 font-medium text-gray-900">
@@ -252,8 +225,7 @@ export default {
     const errors = reactive({})
 
     const filters = reactive({
-      search: '',
-      is_active: null
+      search: ''
     })
 
     const form = reactive({
@@ -276,11 +248,6 @@ export default {
           category.name.toLowerCase().includes(search) ||
           (category.description && category.description.toLowerCase().includes(search))
         )
-      }
-
-      // Status filter
-      if (filters.is_active !== null) {
-        filtered = filtered.filter(category => category.is_active === filters.is_active)
       }
 
       return filtered
@@ -375,7 +342,6 @@ export default {
 
     const clearFilters = () => {
       filters.search = ''
-      filters.is_active = null
     }
 
     onMounted(async () => {

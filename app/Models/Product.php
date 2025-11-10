@@ -131,7 +131,7 @@ class Product extends Model
         $defaultImagePath = 'products/default-placeholder.png';
         
         // Get APP_URL from config
-        $appUrl = config('app.url', env('APP_URL', 'http://localhost'));
+        $appUrl = config('app.url', env('APP_URL', 'http://127.0.0.1:8000'));
         $appUrl = rtrim($appUrl, '/');
         
         // Build URL for default placeholder
