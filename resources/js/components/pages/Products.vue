@@ -20,6 +20,16 @@
               Export
             </button>
             <button 
+              @click="downloadImportTemplate"
+              class="inline-flex items-center bg-white hover:bg-gray-50 text-gray-700 border border-gray-300 px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200"
+              title="Download Import Template"
+            >
+              <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v5h16v-5M12 3v13m0 0l4-4m-4 4l-4-4"></path>
+              </svg>
+              Import Template
+            </button>
+            <button 
               @click="showPrintModal = true"
               class="inline-flex items-center bg-white hover:bg-gray-50 text-gray-700 border border-gray-300 px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200"
               title="Print Products"
@@ -371,6 +381,32 @@ export default {
       toast.success(`Exported ${products.value.length} products to CSV`)
     }
 
+    const downloadImportTemplate = () => {
+      const headers = ['name', 'description', 'ean13', 'prix_achat', 'prix_vente', 'stock_quantity', 'min_stock', 'is_active']
+      const sampleRows = [
+        ['Sample Product', 'Optional description for your product', '1234567890123', '10.50', '15.99', '100', '5', 'true'],
+        ['Second Example', '', '', '5.00', '9.99', '25', '0', 'false']
+      ]
+      const csvContent = [
+        headers,
+        ...sampleRows
+      ].map(row => row.map(cell => {
+        const value = cell == null ? '' : String(cell)
+        return `"${value.replace(/"/g, '""')}"`
+      }).join(',')).join('\n')
+
+      const blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' })
+      const link = document.createElement('a')
+      const url = URL.createObjectURL(blob)
+      link.setAttribute('href', url)
+      link.setAttribute('download', 'product_import_template.csv')
+      link.style.visibility = 'hidden'
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+      toast.info('Product import template downloaded')
+    }
+
 
 
     
@@ -406,7 +442,8 @@ export default {
       closeImagesModal,
       onPrimaryChanged,
       handleImageError,
-      exportProducts
+      exportProducts,
+      downloadImportTemplate
     }
   }
 }
