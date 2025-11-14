@@ -7,29 +7,29 @@
       <fieldset :disabled="saving || installing" class="mt-6 space-y-4">
         <div>
           <label class="block text-sm font-medium text-gray-700">Application Name</label>
-          <input v-model="form.app_name" type="text" class="mt-1 block w-full h-10 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="My Inventory App" />
+          <input v-model="form.app_name" type="text" class="mt-1 block w-full h-12 text-lg border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" placeholder="My Inventory App" />
         </div>
         <div>
           <label class="block text-sm font-medium text-gray-700">Database Name</label>
-          <input v-model="form.db_database" type="text" class="mt-1 block w-full h-10 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="mobi_part_apps" />
+          <input v-model="form.db_database" type="text" class="mt-1 block w-full h-12 text-lg border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" placeholder="mobi_part_apps" />
         </div>
         <div class="pt-2 border-t border-gray-200"/>
         <div>
           <label class="block text-sm font-medium text-gray-700">Admin Name</label>
-          <input v-model="form.admin_name" type="text" class="mt-1 block w-full h-10 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Master" />
+          <input v-model="form.admin_name" type="text" class="mt-1 block w-full h-12 text-lg border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" placeholder="Master" />
         </div>
         <div>
           <label class="block text-sm font-medium text-gray-700">Admin Email</label>
-          <input v-model="form.admin_email" type="email" class="mt-1 block w-full h-10 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="master@example.com" />
+          <input v-model="form.admin_email" type="email" class="mt-1 block w-full h-12 text-lg border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" placeholder="master@example.com" />
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label class="block text-sm font-medium text-gray-700">Admin Password</label>
-            <input v-model="form.admin_password" type="password" class="mt-1 block w-full h-10 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
+            <input v-model="form.admin_password" type="password" class="mt-1 block w-full h-12 text-lg border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" />
           </div>
           <div>
             <label class="block text-sm font-medium text-gray-700">Confirm Password</label>
-            <input v-model="form.admin_password_confirmation" type="password" class="mt-1 block w-full h-10 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
+            <input v-model="form.admin_password_confirmation" type="password" class="mt-1 block w-full h-12 text-lg border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" />
           </div>
         </div>
       </fieldset>

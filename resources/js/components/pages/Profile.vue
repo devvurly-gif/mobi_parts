@@ -27,7 +27,7 @@
                   v-model="profileForm.name"
                   type="text"
                   required
-                  class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                  class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full h-12 text-lg border-gray-300 rounded-md"
                   :class="{ 'border-red-300': errors.name }"
                 />
                 <p v-if="errors.name" class="mt-1 text-sm text-red-600">{{ errors.name }}</p>
@@ -45,7 +45,7 @@
                   v-model="profileForm.email"
                   type="email"
                   required
-                  class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                  class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full h-12 text-lg border-gray-300 rounded-md"
                   :class="{ 'border-red-300': errors.email }"
                 />
                 <p v-if="errors.email" class="mt-1 text-sm text-red-600">{{ errors.email }}</p>
@@ -87,7 +87,7 @@
                   v-model="passwordForm.current_password"
                   type="password"
                   required
-                  class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                  class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full h-12 text-lg border-gray-300 rounded-md"
                   :class="{ 'border-red-300': errors.current_password }"
                 />
                 <p v-if="errors.current_password" class="mt-1 text-sm text-red-600">{{ errors.current_password }}</p>
@@ -106,7 +106,7 @@
                   type="password"
                   required
                   minlength="6"
-                  class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                  class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full h-12 text-lg border-gray-300 rounded-md"
                   :class="{ 'border-red-300': errors.password }"
                 />
                 <p v-if="errors.password" class="mt-1 text-sm text-red-600">{{ errors.password }}</p>
@@ -125,7 +125,7 @@
                   type="password"
                   required
                   minlength="6"
-                  class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                  class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full h-12 text-lg border-gray-300 rounded-md"
                   :class="{ 'border-red-300': errors.password_confirmation }"
                 />
                 <p v-if="errors.password_confirmation" class="mt-1 text-sm text-red-600">{{ errors.password_confirmation }}</p>

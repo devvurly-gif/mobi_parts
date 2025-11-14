@@ -58,8 +58,8 @@
           id="search"
           v-model="filters.search"
           type="text"
-          placeholder="Search by name, EAN13, or category name..."
-          class="mt-1 block w-full h-10 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+          placeholder="Search by name, EAN13, category, or brand name..."
+          class="mt-1 block w-full h-12 text-lg border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
         />
       </div>
 
@@ -104,7 +104,12 @@
                       Low Stock
                     </span>
                   </div>
-                  <p class="text-sm text-gray-500">{{ product.category?.name || 'No Category' }}</p>
+                  <p class="text-sm text-gray-500">
+                    {{ product.category?.name || 'No Category' }}
+                    <span v-if="product.brand?.name" class="text-gray-400">
+                      • {{ product.brand.parent ? `${product.brand.parent.name} > ` : '' }}{{ product.brand.name }}
+                    </span>
+                  </p>
                   <p v-if="product.ean13" class="text-xs text-gray-400 font-mono">{{ product.ean13 }}</p>
                 </div>
               </div>
@@ -252,11 +257,13 @@ export default {
         const search = filters.value.search.toLowerCase()
         filtered = filtered.filter(product => {
           const categoryName = product.category?.name?.toLowerCase() || ''
+          const brandName = product.brand?.name?.toLowerCase() || ''
           return (
             product.name.toLowerCase().includes(search) ||
             product.description?.toLowerCase().includes(search) ||
             product.ean13?.toLowerCase().includes(search) ||
-            categoryName.includes(search)
+            categoryName.includes(search) ||
+            brandName.includes(search)
           )
         })
       }
@@ -382,10 +389,10 @@ export default {
     }
 
     const downloadImportTemplate = () => {
-      const headers = ['name', 'description', 'ean13', 'prix_achat', 'prix_vente', 'stock_quantity', 'min_stock', 'is_active']
+      const headers = ['name', 'description', 'ean13', 'prix_achat', 'prix_vente', 'stock_quantity', 'min_stock', 'brand_id', 'is_active']
       const sampleRows = [
-        ['Sample Product', 'Optional description for your product', '1234567890123', '10.50', '15.99', '100', '5', 'true'],
-        ['Second Example', '', '', '5.00', '9.99', '25', '0', 'false']
+        ['Sample Product', 'Optional description for your product', '1234567890123', '10.50', '15.99', '100', '5', '', 'true'],
+        ['Second Example', '', '', '5.00', '9.99', '25', '0', '', 'false']
       ]
       const csvContent = [
         headers,

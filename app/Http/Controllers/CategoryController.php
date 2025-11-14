@@ -20,13 +20,10 @@ class CategoryController extends Controller
             $query->where('is_active', $request->boolean('is_active'));
         }
 
-        // Search by name or description
+        // Search by name
         if ($request->has('search')) {
             $search = $request->search;
-            $query->where(function ($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('description', 'like', "%{$search}%");
-            });
+            $query->where('name', 'like', "%{$search}%");
         }
 
         // Sort
@@ -46,8 +43,6 @@ class CategoryController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'image' => 'nullable|string',
             'is_active' => 'boolean',
         ]);
 
@@ -80,8 +75,6 @@ class CategoryController extends Controller
     {
         $validated = $request->validate([
             'name' => 'sometimes|required|string|max:255',
-            'description' => 'nullable|string',
-            'image' => 'nullable|string',
             'is_active' => 'sometimes|boolean',
         ]);
 

@@ -13,9 +13,9 @@ export const useCategoryStore = defineStore('category', {
   getters: {
     activeCategories: (state) => state.categories.filter(category => category.is_active),
     categoryById: (state) => (id) => state.categories.find(category => category.id === id),
-    categoryBySlug: (state) => (slug) => state.categories.find(category => category.slug === slug),
     categoriesCount: (state) => state.categories.length,
-    activeCategoriesCount: (state) => state.activeCategories.length
+    activeCategoriesCount: (state) => state.activeCategories.length,
+    flatCategories: (state) => state.categories
   },
 
   actions: {
@@ -81,6 +81,7 @@ export const useCategoryStore = defineStore('category', {
         this.loading = false
       }
     },
+
 
     async deleteCategory(id) {
       this.loading = true

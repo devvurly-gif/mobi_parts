@@ -38,6 +38,13 @@ Route::get('/categories', function () {
 });
 Route::apiResource('categories', \App\Http\Controllers\CategoryController::class);
 
+// Brand routes
+Route::get('/brands', function () {
+    return \App\Models\Brand::active()->get();
+});
+Route::apiResource('brands', \App\Http\Controllers\BrandController::class);
+Route::post('/brands/{brand}/remove-parent', [\App\Http\Controllers\BrandController::class, 'removeParent']);
+
 // Product images routes (public access)
 Route::get('/product-images', [ProductImageController::class, 'index']);
 Route::post('/product-images', [ProductImageController::class, 'store']);

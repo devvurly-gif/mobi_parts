@@ -66,7 +66,7 @@
                 v-model="form.name"
                 type="text"
                 required
-                class="mt-1 block w-full h-10 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                class="mt-1 block w-full h-12 text-lg border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                 :class="{ 'border-red-300': errors.name }"
               />
               <p v-if="errors.name" class="mt-1 text-sm text-red-600">{{ errors.name }}</p>
@@ -79,15 +79,32 @@
                 id="category_id"
                 v-model="form.category_id"
                 required
-                class="mt-1 block w-full h-10 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                class="mt-1 block w-full h-12 text-lg border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                 :class="{ 'border-red-300': errors.category_id }"
               >
                 <option value="">Select a category</option>
-                <option v-for="category in categories" :key="category.id" :value="category.id">
-                  {{ category.name }}
+                <option v-for="category in flatCategories" :key="category.id" :value="category.id">
+                  {{ category.displayName || category.name }}
                 </option>
               </select>
               <p v-if="errors.category_id" class="mt-1 text-sm text-red-600">{{ errors.category_id }}</p>
+            </div>
+
+            <!-- Brand -->
+            <div>
+              <label for="brand_id" class="block text-sm font-medium text-gray-700">Brand</label>
+              <select
+                id="brand_id"
+                v-model="form.brand_id"
+                class="mt-1 block w-full h-12 text-lg border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                :class="{ 'border-red-300': errors.brand_id }"
+              >
+                <option value="">Select a brand (optional)</option>
+                <option v-for="brand in flatBrands" :key="brand.id" :value="brand.id">
+                  {{ brand.displayName || brand.name }}
+                </option>
+              </select>
+              <p v-if="errors.brand_id" class="mt-1 text-sm text-red-600">{{ errors.brand_id }}</p>
             </div>
 
             <!-- EAN13 -->
@@ -97,7 +114,7 @@
                 id="ean13"
                 v-model="form.ean13"
                 type="text"
-                class="mt-1 block w-full h-10 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                class="mt-1 block w-full h-12 text-lg border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                 :class="{ 'border-red-300': errors.ean13 }"
               />
               <p v-if="errors.ean13" class="mt-1 text-sm text-red-600">{{ errors.ean13 }}</p>
@@ -117,7 +134,7 @@
                   step="0.01"
                   min="0"
                   required
-                  class="pl-7 block w-full h-10 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  class="pl-7 block w-full h-12 text-lg border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                   :class="{ 'border-red-300': errors.prix_achat }"
                 />
               </div>
@@ -138,7 +155,7 @@
                   step="0.01"
                   min="0"
                   required
-                  class="pl-7 block w-full h-10 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  class="pl-7 block w-full h-12 text-lg border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                   :class="{ 'border-red-300': errors.prix_vente }"
                 />
               </div>
@@ -153,7 +170,7 @@
                 v-model="form.stock_quantity"
                 type="number"
                 min="0"
-                class="mt-1 block w-full h-10 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                class="mt-1 block w-full h-12 text-lg border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                 :class="{ 'border-red-300': errors.stock_quantity }"
               />
               <p v-if="errors.stock_quantity" class="mt-1 text-sm text-red-600">{{ errors.stock_quantity }}</p>
@@ -167,7 +184,7 @@
                 v-model="form.min_stock"
                 type="number"
                 min="0"
-                class="mt-1 block w-full h-10 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                class="mt-1 block w-full h-12 text-lg border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                 :class="{ 'border-red-300': errors.min_stock }"
               />
               <p v-if="errors.min_stock" class="mt-1 text-sm text-red-600">{{ errors.min_stock }}</p>
@@ -180,7 +197,7 @@
                 id="image"
                 v-model="form.image"
                 type="url"
-                class="mt-1 block w-full h-10 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                class="mt-1 block w-full h-12 text-lg border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                 :class="{ 'border-red-300': errors.image }"
               />
               <p v-if="errors.image" class="mt-1 text-sm text-red-600">{{ errors.image }}</p>
@@ -209,7 +226,7 @@
               id="description"
               v-model="form.description"
               rows="4"
-              class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              class="mt-1 block w-full h-12 text-lg border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
               :class="{ 'border-red-300': errors.description }"
             ></textarea>
             <p v-if="errors.description" class="mt-1 text-sm text-red-600">{{ errors.description }}</p>
@@ -247,6 +264,7 @@ import { ref, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useProductStore } from '../../stores/productStore'
 import { useCategoryStore } from '../../stores/categoryStore'
+import { useBrandStore } from '../../stores/brandStore'
 import { useToast } from 'vue-toastification'
 
 export default {
@@ -256,6 +274,7 @@ export default {
     const router = useRouter()
     const productStore = useProductStore()
     const categoryStore = useCategoryStore()
+    const brandStore = useBrandStore()
     const toast = useToast()
 
     const loading = ref(true)
@@ -267,6 +286,7 @@ export default {
     const form = ref({
       name: '',
       category_id: '',
+      brand_id: '',
       description: '',
       ean13: '',
       prix_achat: 0,
@@ -278,6 +298,9 @@ export default {
     })
 
     const categories = computed(() => categoryStore.categories)
+    const flatCategories = computed(() => categoryStore.flatCategories)
+    const brands = computed(() => brandStore.activeBrands)
+    const flatBrands = computed(() => brandStore.flatBrandsForSelect.filter(brand => brand.is_active))
 
     const loadProduct = async () => {
       try {
@@ -312,6 +335,7 @@ export default {
       form.value = {
         name: productData.name || '',
         category_id: productData.category_id || '',
+        brand_id: productData.brand_id || '',
         description: productData.description || '',
         ean13: productData.ean13 || '',
         prix_achat: productData.prix_achat || 0,
@@ -348,7 +372,10 @@ export default {
     }
 
     onMounted(async () => {
-      await categoryStore.fetchCategories()
+      await Promise.all([
+        categoryStore.fetchCategories(),
+        brandStore.fetchBrands()
+      ])
       await loadProduct()
     })
 
@@ -360,6 +387,9 @@ export default {
       form,
       errors,
       categories,
+      flatCategories,
+      brands,
+      flatBrands,
       loadProduct,
       updateProduct
     }

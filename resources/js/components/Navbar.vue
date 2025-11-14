@@ -1,6 +1,6 @@
 <template>
   <nav class="bg-white shadow-lg">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex justify-between h-16">
         <!-- Logo and Brand -->
         <div class="flex items-center">
@@ -57,6 +57,32 @@
           </router-link>
           
           <router-link 
+            to="/brands" 
+            class="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200"
+            :class="{ 'text-indigo-600 bg-indigo-50': $route.name === 'brands' }"
+          >
+            <div class="flex items-center">
+              <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+              </svg>
+              Brands
+            </div>
+          </router-link>
+          
+          <router-link 
+            to="/imports" 
+            class="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200"
+            :class="{ 'text-indigo-600 bg-indigo-50': $route.name === 'imports' }"
+          >
+            <div class="flex items-center">
+              <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10"></path>
+              </svg>
+              Imports
+            </div>
+          </router-link>
+          
+          <router-link 
             to="/users" 
             class="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200"
             :class="{ 'text-indigo-600 bg-indigo-50': $route.name === 'users' }"
@@ -66,32 +92,6 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
               </svg>
               Users
-            </div>
-          </router-link>
-          
-              <router-link
-                to="/products/import"
-                class="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200"
-                :class="{ 'text-indigo-600 bg-indigo-50': $route.name === 'product-import' }"
-              >
-                <div class="flex items-center">
-                  <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10"></path>
-                  </svg>
-                  Import Products
-                </div>
-              </router-link>
-          
-          <router-link 
-            to="/products/import-stock" 
-            class="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200"
-            :class="{ 'text-indigo-600 bg-indigo-50': $route.name === 'product-stock-import' }"
-          >
-            <div class="flex items-center">
-              <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h18M9 7v14m6-14v14M5 21h14" />
-              </svg>
-              Import Stock
             </div>
           </router-link>
         </div>
@@ -213,6 +213,20 @@
           </router-link>
           
           <router-link 
+            to="/brands" 
+            class="text-gray-600 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium"
+            :class="{ 'text-indigo-600 bg-indigo-50': $route.name === 'brands' }"
+            @click="showMobileMenu = false"
+          >
+            <div class="flex items-center">
+              <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+              </svg>
+              Brands
+            </div>
+          </router-link>
+          
+          <router-link 
             to="/users" 
             class="text-gray-600 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium"
             :class="{ 'text-indigo-600 bg-indigo-50': $route.name === 'users' }"
@@ -226,33 +240,6 @@
             </div>
           </router-link>
           
-            <router-link
-              to="/products/import"
-              class="text-gray-600 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium"
-              :class="{ 'text-indigo-600 bg-indigo-50': $route.name === 'product-import' }"
-              @click="showMobileMenu = false"
-            >
-              <div class="flex items-center">
-                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10"></path>
-                </svg>
-                Import Products
-              </div>
-            </router-link>
-
-            <router-link
-              to="/products/import-stock"
-              class="text-gray-600 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium"
-              :class="{ 'text-indigo-600 bg-indigo-50': $route.name === 'product-stock-import' }"
-              @click="showMobileMenu = false"
-            >
-              <div class="flex items-center">
-                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h18M9 7v14m6-14v14M5 21h14" />
-                </svg>
-                Import Stock
-              </div>
-            </router-link>
 
           <!-- Mobile user menu -->
           <div v-if="user" class="border-t border-gray-200 pt-4">

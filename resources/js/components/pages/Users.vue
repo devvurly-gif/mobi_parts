@@ -27,7 +27,7 @@
           v-model="filters.search"
           type="text"
           placeholder="Search by name or email..."
-          class="mt-1 block w-full h-10 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+          class="mt-1 block w-full h-12 text-lg border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
         />
       </div>
 
@@ -129,7 +129,7 @@
                     v-model="form.name"
                     type="text"
                     required
-                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    class="mt-1 block w-full h-12 text-lg border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                     :class="{ 'border-red-300': errors.name }"
                   />
                   <p v-if="errors.name" class="mt-1 text-sm text-red-600">{{ errors.name }}</p>
@@ -145,7 +145,7 @@
                     v-model="form.email"
                     type="email"
                     required
-                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    class="mt-1 block w-full h-12 text-lg border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                     :class="{ 'border-red-300': errors.email }"
                   />
                   <p v-if="errors.email" class="mt-1 text-sm text-red-600">{{ errors.email }}</p>
@@ -163,7 +163,7 @@
                     type="password"
                     :required="!editingUser"
                     :minlength="editingUser ? 0 : 6"
-                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    class="mt-1 block w-full h-12 text-lg border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                     :class="{ 'border-red-300': errors.password }"
                   />
                   <p v-if="errors.password" class="mt-1 text-sm text-red-600">{{ errors.password }}</p>
@@ -180,7 +180,7 @@
                     type="password"
                     :required="!editingUser || !!form.password"
                     :minlength="editingUser && form.password ? 6 : (editingUser ? 0 : 6)"
-                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    class="mt-1 block w-full h-12 text-lg border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                     :class="{ 'border-red-300': errors.password_confirmation }"
                   />
                   <p v-if="errors.password_confirmation" class="mt-1 text-sm text-red-600">{{ errors.password_confirmation }}</p>

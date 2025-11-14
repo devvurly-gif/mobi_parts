@@ -26,8 +26,8 @@
           id="search"
           v-model="filters.search"
           type="text"
-          placeholder="Search by name or description..."
-          class="mt-1 block w-full h-10 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+          placeholder="Search by name..."
+          class="mt-1 block w-full h-12 text-lg border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
         />
       </div>
 
@@ -52,18 +52,14 @@
               <div class="flex items-center flex-1">
                 <div class="shrink-0">
                   <div class="h-12 w-12 rounded-lg overflow-hidden bg-gray-100 border border-gray-200 flex items-center justify-center">
-                    <img
-                      v-if="category.image"
-                      :src="category.image"
-                      :alt="category.name"
-                      class="h-full w-full object-cover"
-                    />
-                    <span v-else class="text-lg font-medium text-gray-500">{{ category.name.charAt(0).toUpperCase() }}</span>
+                    <span class="text-lg font-medium text-gray-500">{{ category.name.charAt(0).toUpperCase() }}</span>
                   </div>
                 </div>
                 <div class="ml-4 flex-1">
                   <div class="flex items-center">
-                    <p class="text-sm font-medium text-gray-900">{{ category.name }}</p>
+                    <p class="text-sm font-medium text-gray-900">
+                      {{ category.name }}
+                    </p>
                     <span v-if="category.is_active" class="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
                       Active
                     </span>
@@ -71,8 +67,6 @@
                       Inactive
                     </span>
                   </div>
-                  <p v-if="category.description" class="mt-1 text-sm text-gray-500">{{ category.description }}</p>
-                  <p v-if="category.slug" class="mt-1 text-xs text-gray-400 font-mono">{{ category.slug }}</p>
                 </div>
               </div>
               <div class="flex items-center space-x-3">
@@ -131,42 +125,10 @@
                     v-model="form.name"
                     type="text"
                     required
-                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    class="mt-1 block w-full h-12 text-lg border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                     :class="{ 'border-red-300': errors.name }"
                   />
                   <p v-if="errors.name" class="mt-1 text-sm text-red-600">{{ errors.name }}</p>
-                </div>
-
-                <!-- Description -->
-                <div>
-                  <label for="description" class="block text-sm font-medium text-gray-700">
-                    Description
-                  </label>
-                  <textarea
-                    id="description"
-                    v-model="form.description"
-                    rows="3"
-                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                    :class="{ 'border-red-300': errors.description }"
-                  ></textarea>
-                  <p v-if="errors.description" class="mt-1 text-sm text-red-600">{{ errors.description }}</p>
-                </div>
-
-                <!-- Image URL -->
-                <div>
-                  <label for="image" class="block text-sm font-medium text-gray-700">
-                    Image URL
-                  </label>
-                  <input
-                    id="image"
-                    v-model="form.image"
-                    type="text"
-                    placeholder="https://example.com/image.jpg"
-                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                    :class="{ 'border-red-300': errors.image }"
-                  />
-                  <p v-if="errors.image" class="mt-1 text-sm text-red-600">{{ errors.image }}</p>
-                  <p class="mt-1 text-xs text-gray-500">Optional: URL to an image for this category</p>
                 </div>
 
                 <!-- Active Status -->
@@ -230,8 +192,6 @@ export default {
 
     const form = reactive({
       name: '',
-      description: '',
-      image: '',
       is_active: true
     })
 
@@ -245,8 +205,7 @@ export default {
       if (filters.search) {
         const search = filters.search.toLowerCase()
         filtered = filtered.filter(category => 
-          category.name.toLowerCase().includes(search) ||
-          (category.description && category.description.toLowerCase().includes(search))
+          category.name.toLowerCase().includes(search)
         )
       }
 
@@ -261,8 +220,6 @@ export default {
 
     const resetForm = () => {
       form.name = ''
-      form.description = ''
-      form.image = ''
       form.is_active = true
       clearErrors()
     }
@@ -276,8 +233,6 @@ export default {
     const editCategory = (category) => {
       editingCategory.value = category
       form.name = category.name || ''
-      form.description = category.description || ''
-      form.image = category.image || ''
       form.is_active = category.is_active !== false
       clearErrors()
       showModal.value = true
@@ -296,8 +251,6 @@ export default {
       try {
         const categoryData = {
           name: form.name,
-          description: form.description || null,
-          image: form.image || null,
           is_active: form.is_active
         }
 
@@ -368,4 +321,3 @@ export default {
   }
 }
 </script>
-

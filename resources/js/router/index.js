@@ -14,6 +14,8 @@ import Install from '../components/pages/Install.vue'
 import Home from '../components/pages/Home.vue'
 import Profile from '../components/pages/Profile.vue'
 import Categories from '../components/pages/Categories.vue'
+import Brands from '../components/pages/Brands.vue'
+import Imports from '../components/pages/Imports.vue'
 import Users from '../components/pages/Users.vue'
 
 const routes = [
@@ -63,6 +65,15 @@ const routes = [
     meta: { 
       requiresAuth: true,
       title: 'Categories'
+    }
+  },
+  {
+    path: '/brands',
+    name: 'brands',
+    component: Brands,
+    meta: { 
+      requiresAuth: true,
+      title: 'Brands'
     }
   },
   {
@@ -134,6 +145,15 @@ const routes = [
     meta: { 
       requiresAuth: true,
       title: 'Profile'
+    }
+  },
+  {
+    path: '/imports',
+    name: 'imports',
+    component: Imports,
+    meta: { 
+      requiresAuth: true,
+      title: 'Imports'
     }
   },
   {

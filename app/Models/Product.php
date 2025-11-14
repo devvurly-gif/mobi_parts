@@ -15,6 +15,7 @@ class Product extends Model
     protected $fillable = [
         'name',
         'category_id',
+        'brand_id',
         'description',
         'ean13',
         'prix_achat',
@@ -42,6 +43,12 @@ class Product extends Model
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);
+    }
+
+    // Relationship with brand
+    public function brand(): BelongsTo
+    {
+        return $this->belongsTo(Brand::class);
     }
 
     // Relationship with images

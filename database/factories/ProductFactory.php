@@ -22,6 +22,7 @@ class ProductFactory extends Factory
         return [
             'name' => $this->faker->words(3, true),
             'category_id' => \App\Models\Category::factory(),
+            'brand_id' => $this->faker->optional(0.7)->passthrough(\App\Models\Brand::factory()), // 70% chance of having a brand
             'description' => $this->faker->paragraph(3),
             'ean13' => $this->faker->ean13(),
             'prix_achat' => $prixAchat,

@@ -20,9 +20,6 @@ class CategoryFactory extends Factory
         
         return [
             'name' => ucwords($name),
-            'slug' => \Illuminate\Support\Str::slug($name),
-            'description' => $this->faker->sentence(10),
-            'image' => $this->faker->imageUrl(400, 300, 'business', true),
             'is_active' => $this->faker->boolean(80), // 80% chance of being active
         ];
     }

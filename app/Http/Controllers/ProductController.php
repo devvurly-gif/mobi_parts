@@ -15,7 +15,7 @@ class ProductController extends Controller
      */
     public function index(Request $request)
     {
-        $products = Product::with(['category', 'primaryImage', 'images'])
+        $products = Product::with(['category', 'brand', 'primaryImage', 'images'])
             ->orderBy('created_at', 'desc')
             ->get();
 
@@ -30,6 +30,7 @@ class ProductController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
+            'brand_id' => 'nullable|exists:brands,id',
             'description' => 'nullable|string',
             'ean13' => 'nullable|string|unique:products,ean13',
             'prix_achat' => 'required|numeric|min:0',
@@ -41,7 +42,7 @@ class ProductController extends Controller
         ]);
 
         $product = Product::create($validated);
-        $product->load(['category', 'primaryImage']);
+        $product->load(['category', 'brand', 'primaryImage']);
 
         return response()->json([
             'message' => 'Product created successfully',
@@ -54,7 +55,7 @@ class ProductController extends Controller
      */
     public function show(Product $product): JsonResponse
     {
-        $product->load(['category', 'primaryImage', 'images']);
+        $product->load(['category', 'brand', 'primaryImage', 'images']);
         
         return response()->json([
             'product' => $product,
@@ -73,6 +74,7 @@ class ProductController extends Controller
         $validated = $request->validate([
             'name' => 'sometimes|required|string|max:255',
             'category_id' => 'sometimes|required|exists:categories,id',
+            'brand_id' => 'nullable|exists:brands,id',
             'description' => 'nullable|string',
             'ean13' => [
                 'nullable',
@@ -88,7 +90,7 @@ class ProductController extends Controller
         ]);
 
         $product->update($validated);
-        $product->load(['category', 'primaryImage']);
+        $product->load(['category', 'brand', 'primaryImage']);
 
         return response()->json([
             'message' => 'Product updated successfully',
@@ -118,7 +120,7 @@ class ProductController extends Controller
 
         return response()->json([
             'message' => 'Product restored successfully',
-            'product' => $product->load(['category', 'primaryImage'])
+            'product' => $product->load(['category', 'brand', 'primaryImage'])
         ]);
     }
 
@@ -165,7 +167,7 @@ class ProductController extends Controller
 
         return response()->json([
             'message' => 'Stock updated successfully',
-            'product' => $product->fresh(['category', 'primaryImage'])
+            'product' => $product->fresh(['category', 'brand', 'primaryImage'])
         ]);
     }
 
@@ -208,7 +210,7 @@ class ProductController extends Controller
 
         return response()->json([
             'message' => 'Stock updated successfully',
-            'product' => $product->fresh(['category', 'primaryImage'])
+            'product' => $product->fresh(['category', 'brand', 'primaryImage'])
         ]);
     }
 }
