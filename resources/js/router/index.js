@@ -17,6 +17,8 @@ import Categories from '../components/pages/Categories.vue'
 import Brands from '../components/pages/Brands.vue'
 import Imports from '../components/pages/Imports.vue'
 import Users from '../components/pages/Users.vue'
+import ImageUpload from '../components/pages/ImageUpload.vue'
+import ImageGallery from '../components/pages/ImageGallery.vue'
 
 const routes = [
   {
@@ -163,6 +165,24 @@ const routes = [
     meta: { 
       requiresAuth: true,
       title: 'Users'
+    }
+  },
+  {
+    path: '/images/upload',
+    name: 'image-upload',
+    component: ImageUpload,
+    meta: { 
+      requiresAuth: true,
+      title: 'Upload Images'
+    }
+  },
+  {
+    path: '/images/gallery',
+    name: 'image-gallery',
+    component: ImageGallery,
+    meta: { 
+      requiresAuth: true,
+      title: 'Image Gallery'
     }
   },
   // Catch all route - redirect to home

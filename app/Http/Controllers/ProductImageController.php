@@ -17,14 +17,26 @@ class ProductImageController extends Controller
     public function index(Request $request): JsonResponse
     {
         $productId = $request->query('product_id');
+        $unattached = $request->query('unattached', false);
         
-        if (!$productId) {
-            return response()->json(['message' => 'Product ID is required'], 400);
+        if ($unattached) {
+            // Return all images without a product_id
+            $images = ProductImage::whereNull('product_id')
+                ->orderBy('created_at', 'desc')
+                ->get();
+            return response()->json($images);
         }
-
-        $product = Product::findOrFail($productId);
-        $images = $product->images()->get();
-
+        
+        if ($productId) {
+            $product = Product::findOrFail($productId);
+            $images = $product->images()->get();
+            return response()->json($images);
+        }
+        
+        // Return all images if no filter specified
+        $images = ProductImage::with('product')
+            ->orderBy('created_at', 'desc')
+            ->get();
         return response()->json($images);
     }
 
@@ -34,7 +46,7 @@ class ProductImageController extends Controller
     public function store(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(), [
-            'product_id' => 'required|exists:products,id',
+            'product_id' => 'nullable|exists:products,id',
             'images' => 'required|array|min:1|max:10',
             'images.*' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
             'alt_texts' => 'sometimes|array',
@@ -45,8 +57,12 @@ class ProductImageController extends Controller
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
-        $product = Product::findOrFail($request->product_id);
         $uploadedImages = [];
+        $product = null;
+        
+        if ($request->product_id) {
+            $product = Product::findOrFail($request->product_id);
+        }
 
         foreach ($request->file('images') as $index => $image) {
             // Store the image
@@ -55,16 +71,23 @@ class ProductImageController extends Controller
             // Get alt text for this image
             $altText = $request->alt_texts[$index] ?? null;
             
-            // Get the next sort order
-            $sortOrder = $product->images()->max('sort_order') + 1;
+            // Get the next sort order if product exists
+            $sortOrder = 0;
+            $isPrimary = false;
+            
+            if ($product) {
+                $sortOrder = $product->images()->max('sort_order') ?? 0;
+                $sortOrder += 1;
+                $isPrimary = $product->images()->count() === 0; // First image is primary
+            }
             
             // Create the image record
             $productImage = ProductImage::create([
-                'product_id' => $product->id,
+                'product_id' => $product?->id,
                 'image_path' => $path,
                 'alt_text' => $altText,
                 'sort_order' => $sortOrder,
-                'is_primary' => $product->images()->count() === 0, // First image is primary
+                'is_primary' => $isPrimary,
             ]);
 
             $uploadedImages[] = $productImage;
@@ -100,7 +123,7 @@ class ProductImageController extends Controller
         }
 
         // If setting as primary, unset other primary images for this product
-        if ($request->has('is_primary') && $request->is_primary) {
+        if ($request->has('is_primary') && $request->is_primary && $productImage->product_id) {
             ProductImage::where('product_id', $productImage->product_id)
                 ->where('id', '!=', $productImage->id)
                 ->update(['is_primary' => false]);
@@ -125,7 +148,7 @@ class ProductImageController extends Controller
         }
 
         // If this was the primary image, set another as primary
-        if ($productImage->is_primary) {
+        if ($productImage->is_primary && $productImage->product_id) {
             $nextPrimary = ProductImage::where('product_id', $productImage->product_id)
                 ->where('id', '!=', $productImage->id)
                 ->first();
@@ -162,5 +185,49 @@ class ProductImageController extends Controller
         }
 
         return response()->json(['message' => 'Images reordered successfully']);
+    }
+
+    /**
+     * Attach images to a product
+     */
+    public function attachToProduct(Request $request): JsonResponse
+    {
+        $validator = Validator::make($request->all(), [
+            'product_id' => 'required|exists:products,id',
+            'image_ids' => 'required|array|min:1',
+            'image_ids.*' => 'required|exists:product_images,id',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        $product = Product::findOrFail($request->product_id);
+        $imageIds = $request->image_ids;
+        
+        // Get the current max sort order for this product
+        $maxSortOrder = $product->images()->max('sort_order') ?? 0;
+        $hasNoImages = $product->images()->count() === 0;
+        
+        // Update images to attach them to the product
+        $updatedImages = [];
+        foreach ($imageIds as $index => $imageId) {
+            $image = ProductImage::findOrFail($imageId);
+            
+            // Only attach if not already attached to another product
+            if ($image->product_id === null) {
+                $image->update([
+                    'product_id' => $product->id,
+                    'sort_order' => $maxSortOrder + $index + 1,
+                    'is_primary' => $hasNoImages && $index === 0, // First attached image becomes primary if product has no images
+                ]);
+                $updatedImages[] = $image->fresh();
+            }
+        }
+
+        return response()->json([
+            'message' => 'Images attached successfully',
+            'images' => $updatedImages
+        ]);
     }
 }

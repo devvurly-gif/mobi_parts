@@ -52,6 +52,7 @@ Route::get('/product-images/{productImage}', [ProductImageController::class, 'sh
 Route::put('/product-images/{productImage}', [ProductImageController::class, 'update']);
 Route::delete('/product-images/{productImage}', [ProductImageController::class, 'destroy']);
 Route::post('/product-images/reorder', [ProductImageController::class, 'reorder']);
+Route::post('/product-images/attach', [ProductImageController::class, 'attachToProduct']);
 
 // First-time installation routes (public)
 Route::get('/install/status', [InstallController::class, 'status']);
