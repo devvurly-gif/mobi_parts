@@ -72,14 +72,14 @@
               <div class="flex items-center space-x-3">
                 <button
                   @click="editCategory(category)"
-                  class="text-indigo-600 hover:text-indigo-900 text-sm font-medium"
+                  class="text-indigo-600 hover:bg-indigo-600 hover:text-white hover:shadow-md hover:scale-105 transition-all duration-200 px-3 py-2 rounded-md text-sm font-medium"
                   title="Edit category"
                 >
                   Edit
                 </button>
                 <button
                   @click="deleteCategory(category)"
-                  class="text-red-600 hover:text-red-900 text-sm font-medium"
+                  class="text-red-600 hover:bg-red-600 hover:text-white hover:shadow-md hover:scale-105 transition-all duration-200 px-3 py-2 rounded-md text-sm font-medium"
                   title="Delete category"
                 >
                   Delete

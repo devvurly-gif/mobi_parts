@@ -131,7 +131,7 @@
                   </button>
                   <button 
                     @click="editProduct(product)"
-                    class="inline-flex items-center text-indigo-600 hover:text-indigo-900 text-sm font-medium"
+                    class="inline-flex items-center text-indigo-600 hover:bg-indigo-600 hover:text-white hover:shadow-md hover:scale-105 transition-all duration-200 px-3 py-2 rounded-md text-sm font-medium"
                     title="Modify Product"
                   >
                     <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -141,7 +141,7 @@
                   </button>
                   <button 
                     @click="deleteProduct(product)"
-                    class="inline-flex items-center text-red-600 hover:text-red-900 text-sm font-medium"
+                    class="inline-flex items-center text-red-600 hover:bg-red-600 hover:text-white hover:shadow-md hover:scale-105 transition-all duration-200 px-3 py-2 rounded-md text-sm font-medium"
                     title="Delete Product"
                   >
                     <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -307,10 +307,8 @@ export default {
 
     const deleteProduct = async (product) => {
       if (confirm(`Are you sure you want to delete "${product.name}"?`)) {
-        const result = await productStore.deleteProduct(product.id)
-        if (result.success) {
-          toast.success('Product deleted successfully!')
-        }
+        await productStore.deleteProduct(product.id)
+        // Toast notification is handled in the store
       }
     }
 
@@ -455,3 +453,4 @@ export default {
   }
 }
 </script>
+

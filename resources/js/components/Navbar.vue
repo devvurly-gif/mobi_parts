@@ -269,7 +269,7 @@
           
 
           <!-- Mobile user menu -->
-          <div v-if="user" class="border-t border-gray-200 pt-4">
+          <div v-if="!user" class="border-t border-gray-200 pt-4">
             <div class="px-3 py-2 text-sm text-gray-700">
               <div class="font-medium">{{ user.name }}</div>
               <div class="text-gray-500">{{ user.email }}</div>

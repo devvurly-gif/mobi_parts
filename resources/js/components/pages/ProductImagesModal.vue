@@ -140,7 +140,7 @@
                           <button 
                             @click="deleteImage(image, index)"
                             :disabled="uploading"
-                            class="p-2 bg-white rounded-full text-gray-600 hover:text-red-600 disabled:opacity-50 transition-colors shadow-lg"
+                            class="p-2 bg-white rounded-full text-gray-600 hover:bg-red-600 hover:text-white hover:shadow-md hover:scale-110 disabled:opacity-50 transition-all duration-200 shadow-lg"
                             title="Delete image"
                           >
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

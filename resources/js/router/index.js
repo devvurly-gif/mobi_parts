@@ -19,12 +19,13 @@ import Imports from '../components/pages/Imports.vue'
 import Users from '../components/pages/Users.vue'
 import ImageUpload from '../components/pages/ImageUpload.vue'
 import ImageGallery from '../components/pages/ImageGallery.vue'
+import HomePage from '../components/pages/HomePage.vue'
 
 const routes = [
   {
     path: '/',
     name: 'home',
-    component: Home,
+    component: HomePage,
     meta: {
       title: 'Home'
     }

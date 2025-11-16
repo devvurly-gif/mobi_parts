@@ -199,7 +199,7 @@
                     </button>
                     <button
                       @click="deleteImage(image)"
-                      class="text-red-600 hover:text-red-900"
+                      class="text-red-600 hover:bg-red-600 hover:text-white hover:shadow-md hover:scale-110 transition-all duration-200 p-2 rounded-md"
                       title="Delete Image"
                     >
                       <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
